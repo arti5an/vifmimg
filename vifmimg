@@ -18,7 +18,7 @@ image() {
 zipmontage() {
 	CBZ_PREVIEW_TEMP=$(mktemp -d)
 	zipinfo -1 "$1" | grep -iEe ".(jpeg|jpg|png)$" | shuf | head -9 | xargs -d "\n" -- unzip -q -d "${CBZ_PREVIEW_TEMP}" "$1"
-	find "${CBZ_PREVIEW_TEMP}" -type f | sort -n | xargs -d "\n" -- feh -m -y 360 -E 240 -W 1280 -O "$2"
+	find "${CBZ_PREVIEW_TEMP}" -type f | sort -n | xargs -d "\n" -- feh -b trans -m -y 360 -E 240 -W 1280 -O "$2"
 	rm -rf "${CBZ_PREVIEW_TEMP}"
 }
 

@@ -15,6 +15,13 @@ image() {
 		printf '{"action": "add", "identifier": "vifm-preview", "x": "%s", "y": "%s", "width": "%s", "height": "%s", "scaler": "contain", "path": "%s"}\n' "$(($2 + XSHIFT))" "$(($3 + YSHIFT))" "$(($4 + WADJUST))" "$(($5 + HADJUST))" "$6" > "$FIFO_UEBERZUG"
 }
 
+zipmontage() {
+	CBZ_PREVIEW_TEMP=$(mktemp -d)
+	zipinfo -1 "$1" | grep -iEe ".(jpeg|jpg|png)$" | shuf | head -9 | xargs -d "\n" -- unzip -q -d "${CBZ_PREVIEW_TEMP}" "$1"
+	find "${CBZ_PREVIEW_TEMP}" -type f | sort -n | xargs -d "\n" -- feh -b trans -m -y 360 -E 240 -W 1280 -O "$2"
+	rm -rf "${CBZ_PREVIEW_TEMP}"
+}
+
 main() {
     case "$1" in
         "clear")
@@ -28,6 +35,11 @@ main() {
 			[ ! -f "${PCACHE}.jpg" ] && \
 				ffmpegthumbnailer -i "$6" -o "${PCACHE}.jpg" -s 0 -q 5
 			image "$1" "$2" "$3" "$4" "$5" "${PCACHE}.jpg"
+			;;
+        "cbz")
+			[ ! -f "${PCACHE}.png" ] && \
+				zipmontage "$6" "${PCACHE}.png"
+			image "$1" "$2" "$3" "$4" "$5" "$PCACHE.png"
 			;;
         "epub")
 			[ ! -f "$PCACHE" ] && \

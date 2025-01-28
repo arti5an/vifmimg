@@ -2,13 +2,17 @@
 
 PCACHE="$HOME/.cache/vifm/thumbnail.$(stat --printf '%n\0%i\0%F\0%s\0%W\0%Y' -- "$(readlink -f "$PWD/$6")" | sha256sum)"
 export PCACHE="${PCACHE%% *}"
+XSHIFT=-1
+YSHIFT=0
+WADJUST=0
+HADJUST=-1
 
 pclear() {
 	printf '{"action": "remove", "identifier": "vifm-preview"}\n' > "$FIFO_UEBERZUG"
 }
 
 image() {
-		printf '{"action": "add", "identifier": "vifm-preview", "x": "%s", "y": "%s", "width": "%s", "height": "%s", "scaler": "contain", "path": "%s"}\n' "$2" "$3" "$4" "$5" "$6" > "$FIFO_UEBERZUG"
+		printf '{"action": "add", "identifier": "vifm-preview", "x": "%s", "y": "%s", "width": "%s", "height": "%s", "scaler": "contain", "path": "%s"}\n' "$(($2 + XSHIFT))" "$(($3 + YSHIFT))" "$(($4 + WADJUST))" "$(($5 + HADJUST))" "$6" > "$FIFO_UEBERZUG"
 }
 
 main() {

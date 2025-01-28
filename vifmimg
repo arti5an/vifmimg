@@ -33,7 +33,7 @@ main() {
 			;;
         "video")
 			[ ! -f "${PCACHE}.jpg" ] && \
-				ffmpegthumbnailer -i "$6" -o "${PCACHE}.jpg" -s 0 -q 5
+				vcsi -o "${PCACHE}.jpg" -f jpg -w 1280 -g 3x3 --metadata-position hidden --fast "$6" >/dev/null
 			image "$1" "$2" "$3" "$4" "$5" "${PCACHE}.jpg"
 			;;
         "cbz")
